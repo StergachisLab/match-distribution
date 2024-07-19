@@ -3,7 +3,7 @@
 Sample and force the distribution of PS2 to be the same as that of PS1.
 
 Usage:<br/>
-<code>filter_distr1_distr2.sh model-after.ft.bam input.ft.bam output.filtered.ft.bam</code>
+<code>src/filter_distr1_distr2.sh model-after.ft.bam input.ft.bam output.filtered.ft.bam</code>
 
 <pre>
 model-after.ft.bam:     The distribution you like
