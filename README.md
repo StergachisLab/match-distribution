@@ -13,6 +13,7 @@ Sample and force the distribution of PS2 to be the same as that of PS1.
 Then, activate your environment<br/>
 <code>conda activate distr-match</code><br/><br/>
 
+<hr/>
 Usage:<br/>
 <code>src/filter_distr1_distr2.sh model-after.ft.bam input.ft.bam output.filtered.ft.bam</code>
 
