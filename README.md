@@ -10,14 +10,14 @@ Sample and force the distribution of PS2 to be the same as that of PS1.
 # install external dependencies using:<br/>
 <code>conda create -n distr-match</code><br/>
 <code>mamba env update -n distr-match --file env/matchme.yaml</code><br/><br/>
-Then, activate your environment<br/>
+Activate your environment<br/>
 <code>conda activate distr-match</code><br/><br/>
-There is a small script src/cutnm that needs to be in your $PATH</br>
-For example: export PATH=${PATH}:`pwd`/src<br/><br/>
+Add needed path to $PATH<br/>
+<code>export PATH=${PATH}:`pwd`/src<br/></code>
 
 <hr/>
 Usage:<br/>
-<code>src/filter_distr1_distr2.sh model-after.ft.bam input.ft.bam output.filtered.ft.bam</code>
+<code>filter_distr1_distr2.sh model-after.ft.bam input.ft.bam output.filtered.ft.bam</code>
 
 <pre>
 model-after.ft.bam:     The distribution you like
