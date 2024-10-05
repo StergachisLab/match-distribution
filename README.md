@@ -4,10 +4,10 @@ Sample and force the distribution of PS2 to be the same as that of PS1.
 
 <hr/>
 <h4>Software Setup</h4>
-# download the software:<br/>
+Download the software:<br/>
 <code>git clone https://github.com/StergachisLab/match-distribution.git</code><br/>
 <code>cd match-distribution</code><br/><br/>
-# install external dependencies using:<br/>
+Install external dependencies using:<br/>
 <code>conda create -n distr-match</code><br/>
 <code>mamba env update -n distr-match --file env/matchme.yaml</code><br/><br/>
 Activate your environment<br/>
