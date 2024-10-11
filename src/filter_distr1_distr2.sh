@@ -81,6 +81,19 @@ R --no-save --quiet <<__R__
 
   targets <- floor(root_count * rel_probs / root_prob)
 
+  ## This SLOW loop shows what's going on below with ave() that cheatgpt showed as an equiv
+  # vals <- c()
+  # for (idx in 1:(dim(rd)[1])) {
+  #   targets[rd[idx,2]] <- targets[rd[idx,2]]-1
+  #   vals <- c(vals, targets[rd[idx,2]]>=0)
+  # }
+
+  # Use ave() to apply the decrement per group, replicating the behavior of a loop
+  # Create a helper function to decrement each index correctly
+  target_indices <- rd[, 2]
+  targets[target_indices] <- ave(target_indices, target_indices, FUN=function(x) targets[x[1]] - seq_along(x))
+  vals <- targets[target_indices] >= 0
+
   target_indices <- rd[, 2]
   targets[target_indices] <- targets[target_indices] - 1
   vals <- targets[target_indices] >= 0
