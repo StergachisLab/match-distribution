@@ -94,10 +94,6 @@ R --no-save --quiet <<__R__
   targets[target_indices] <- ave(target_indices, target_indices, FUN=function(x) targets[x[1]] - seq_along(x))
   vals <- targets[target_indices] >= 0
 
-  target_indices <- rd[, 2]
-  targets[target_indices] <- targets[target_indices] - 1
-  vals <- targets[target_indices] >= 0
-
   vals <- as.data.frame(vals*1)
   write.table(vals, file="$tmpd/output.$ftype", quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
 
