@@ -46,11 +46,7 @@ ft extract ${sample_distribution} --all - \
   | cutnm total_m6a_bp,total_AT_bp \
  >${tmpd}/sample_distr.${ftype}
 
-# re-order $inp to remove count bias potential toward earliest chroms
-samtools view -h --subsample-seed 41 --subsample 1 -b ${inp} \
- >${tmpd}/shuffled-input.${ftype}
-
-cat ${tmpd}/shuffled-input.${ftype} \
+cat ${inp} \
   | ft extract --all - \
   | cutnm total_m6a_bp,total_AT_bp \
   >${tmpd}/input.${ftype}
@@ -83,17 +79,11 @@ R --no-save --quiet <<__R__
   colnames(rd) <- c("real_data", "rd_interval")
   rd <- as.data.frame(rd)
 
-  targets <- c()
-  for (i in 1:(length(brks)-1)) {
-    x <- root_count*rel_probs[i]/root_prob
-    targets <- c(targets, floor(x))
-  }
+  targets <- floor(root_count * rel_probs / root_prob)
 
-  vals <- c()
-  for (idx in 1:(dim(rd)[1])) {
-    targets[rd[idx,2]] <- targets[rd[idx,2]]-1
-    vals <- c(vals, targets[rd[idx,2]]>=0)
-  }
+  target_indices <- rd[, 2]
+  targets[target_indices] <- targets[target_indices] - 1
+  vals <- targets[target_indices] >= 0
 
   vals <- as.data.frame(vals*1)
   write.table(vals, file="$tmpd/output.$ftype", quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
@@ -110,10 +100,10 @@ R --no-save --quiet <<__R__
   dev.off()
 __R__
 
-samtools view -H ${tmpd}/shuffled-input.${ftype} \
+samtools view -H ${inp} \
  >${tmpd}/.header
 
-samtools view ${tmpd}/shuffled-input.${ftype} \
+samtools view ${inp} \
   | paste ${tmpd}/output.$ftype - \
   | awk '$1 > 0' \
   | cut -f2- \
