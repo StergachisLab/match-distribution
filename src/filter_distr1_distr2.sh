@@ -63,7 +63,7 @@ R --no-save --quiet <<__R__
   sample_distr <- unlist(ss)
   real_data <- unlist(dd)
 
-  delta <- 0.001
+  delta <- 0.01
   brks <- seq(0, maxx+delta, delta)
   h <- hist(sample_distr, breaks=brks, plot=FALSE)
   j <- hist(real_data, breaks=brks, plot=FALSE)
@@ -95,7 +95,7 @@ R --no-save --quiet <<__R__
   # this helps but a vectorized version of things would be ideal
   vals <- rep(FALSE, dim(rd)[1])
   nvals <- length(vals)
-  for (idx in 1:nvals) {
+  for (idx in seq_len(nvals)) {
     ci <- rd[idx,2]
     targets[ci] <- targets[ci]-1
     vals[idx] <- targets[ci]>=0
