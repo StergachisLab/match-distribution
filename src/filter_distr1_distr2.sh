@@ -79,20 +79,27 @@ R --no-save --quiet <<__R__
   colnames(rd) <- c("real_data", "rd_interval")
   rd <- as.data.frame(rd)
 
-  targets <- floor(root_count * rel_probs / root_prob)
+  targets <- c()
+  for (i in 1:(length(brks)-1)) {
+    x <- root_count*rel_probs[i]/root_prob
+    targets <- c(targets, floor(x))
+  }
 
-  ## This SLOW loop shows what's going on below with ave() that cheatgpt showed as an equiv
+  ## This SLOW loop needs equivalent improvements
   # vals <- c()
   # for (idx in 1:(dim(rd)[1])) {
   #   targets[rd[idx,2]] <- targets[rd[idx,2]]-1
   #   vals <- c(vals, targets[rd[idx,2]]>=0)
   # }
 
-  # Use ave() to apply the decrement per group, replicating the behavior of a loop
-  # Create a helper function to decrement each index correctly
-  target_indices <- rd[, 2]
-  targets[target_indices] <- ave(target_indices, target_indices, FUN=function(x) targets[x[1]] - seq_along(x))
-  vals <- targets[target_indices] >= 0
+  # this helps but a vectorized version of things would be ideal
+  vals <- rep(FALSE, dim(rd)[1])
+  nvals <- length(vals)
+  for (idx in 1:nvals) {
+    ci <- rd[idx,2]
+    targets[ci] <- targets[ci]-1
+    vals[idx] <- targets[ci]>=0
+  }
 
   vals <- as.data.frame(vals*1)
   write.table(vals, file="$tmpd/output.$ftype", quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
