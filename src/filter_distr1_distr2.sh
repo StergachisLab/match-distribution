@@ -14,8 +14,8 @@
 # if a particular interval/break-bin cannot meet target count value, so be it - output everything for that interval/break-bin
 # more generally, reduce the count (900 in example above) so that every interval can meet its recalculated target count
 
-# the subsampling from samtools does not re-order anything, and so my assumptions were incorrect - some things below are
-#  not doing what I thought and/or aren't needed.  For example, sampling with fraction=1 just returns a copy of the original
+# ideally, this script is run on an unaligned input.ft.bam file; otherwise, there will be biases toward keeping reads
+#  from earlier chroms found in the file.
 
 if [[ $# != 3 ]]; then
   printf "Expect $0 <sample-distr.ft.bam> <input.ft.bam> <output-filtered.ft.bam>\n"
@@ -42,14 +42,16 @@ mkdir -p $(dirname "${out}")
 
 ftype=m6a
 
-ft extract ${sample_distribution} --all - \
+(ft extract ${sample_distribution} --all - \
   | cutnm total_m6a_bp,total_AT_bp \
- >${tmpd}/sample_distr.${ftype}
+ >${tmpd}/sample_distr.${ftype}) &
 
-cat ${inp} \
+(cat ${inp} \
   | ft extract --all - \
   | cutnm total_m6a_bp,total_AT_bp \
-  >${tmpd}/input.${ftype}
+ >${tmpd}/input.${ftype}) &
+
+wait
 
 R --no-save --quiet <<__R__
   minx <- 0.00
@@ -63,7 +65,7 @@ R --no-save --quiet <<__R__
   sample_distr <- unlist(ss)
   real_data <- unlist(dd)
 
-  delta <- 0.01
+  delta <- 0.001
   brks <- seq(0, maxx+delta, delta)
   h <- hist(sample_distr, breaks=brks, plot=FALSE)
   j <- hist(real_data, breaks=brks, plot=FALSE)
