@@ -46,8 +46,7 @@ ftype=m6a
   | cutnm total_m6a_bp,total_AT_bp \
  >${tmpd}/sample_distr.${ftype}) &
 
-(cat ${inp} \
-  | ft extract --all - \
+(ft extract ${inp} --all - \
   | cutnm total_m6a_bp,total_AT_bp \
  >${tmpd}/input.${ftype}) &
 
@@ -71,8 +70,12 @@ R --no-save --quiet <<__R__
   j <- hist(real_data, breaks=brks, plot=FALSE)
 
   rel_probs <- h[["counts"]]/length(sample_distr)
-  # adding offset from 5 to keep anomalous things near 0/1 from hurting things
-  mx_index_rel_probs <- which.max(rel_probs[5:length(rel_probs)]) # match to actual count in real_data and calculate all counts from this
+  ignoreme <- 10 # 1% if delta is 0.001
+  # adding offset from ignoreme to keep anomalous things near 0 from hurting things
+  # zeroing out rel_probs <= ignoreme too
+  rel_probs[1:ignoreme] <- 0
+cat(rel_probs)
+  mx_index_rel_probs <- which.max(rel_probs[ignoreme:length(rel_probs)]) # match to actual count in real_data and calculate all counts from this
   root_prob <- rel_probs[mx_index_rel_probs]
   root_count <- j[["counts"]][mx_index_rel_probs]
   fi <- findInterval(real_data, brks) # gives index of brks for each real_data
