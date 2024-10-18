@@ -74,7 +74,7 @@ R --no-save --quiet <<__R__
   # adding offset from ignoreme to keep anomalous things near 0 from hurting things
   # zeroing out rel_probs <= ignoreme too
   rel_probs[1:ignoreme] <- 0
-cat(rel_probs)
+
   mx_index_rel_probs <- which.max(rel_probs[ignoreme:length(rel_probs)]) # match to actual count in real_data and calculate all counts from this
   root_prob <- rel_probs[mx_index_rel_probs]
   root_count <- j[["counts"]][mx_index_rel_probs]
