@@ -21,7 +21,7 @@ Usage:<br/>
 
 <pre>
 model-after.ft.bam:     The distribution you like
-input.ft.bam:           The input distribution that will be sampled from and changed
+input.ft.bam:           The input distribution that will be sampled from and filtered
 output.filtered.ft.bam: The output, sampled from Arg2, that has a distribution similar to that of Arg1
 </pre>
 
